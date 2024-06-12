@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title%}
+    文章详情
+{% endblock %}
+
+<!-- 文章详情 -->
+{% block content %}
+<!-- 文章详情 -->
+<div class="container">
+    <div class="row">
+        <!-- 标题及作者 -->
+        <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>
+        <div class="col-12 alert alert-success">
+            作者：{{ article.author }}
+            . <a href="#" onclick="confirm_delete()">删除文章</a>
+            · <a href="{% url 'article:article_update' article.id %}">编辑文章</a>
+            <form style="display: none"
+                  id="safe_delete"
+                  action="{% url 'article:article_safe_delete' article.id %}"
+                method="post"
+            >
+                {% csrf_token %}
+                <button type="submit">发送</button>
+            </form>
+        </div>
+
+        <!-- 文章正文 -->
+        <div class="col-12">
+        <!-- Django出于安全的考虑，会将输出的HTML代码进行转义,而|safe就类似给article.body贴了一个标签，表示这一段字符不需要进行转义了-->
+            <p>{{ article.body|safe }}</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 删除文章的函数
+    function confirm_delete(){
+        // 调用layer弹窗组件
+        layer.open({
+            //弹窗标题
+            title: "确认删除",
+            //正文
+            content: "确认删除当前文章吗？",
+            // 点击确定按钮后调用的回调函数
+            yes: function (index, layero){
+                // 指定应当前往的 url
+                $('form#safe_delete button').click();
+                layer.close(index);
+            }
+        })
+    }
+</script>
+
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
